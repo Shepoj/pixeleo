@@ -37,11 +37,11 @@
 		function f(x){
 			return Math.sqrt(1-x**2)||0
 		}
-		function bomb(x,y){
+		function bomb(x,y,power){
 			for(let i=0;i<(grid.length);i++){
 				for(let j=0;j<(grid[0].length);j++){
 					let dist = Math.sqrt((i-x)**2+(j-y)**2)
-					let prob = f(dist/3)
+					let prob = f(dist/power)
 					if(Math.random()<prob){grid[i][j]=couleur.value}
 				}
 			}
@@ -60,14 +60,14 @@
 			if(f.keyCode==66){
 				mode="bombe"
 			}
-		}, false)
-		document.addEventListener("keydown",function(ee){
-			if(ee.keyCode==170){
+			else if(f.keyCode==170){
 				if(testMode==false){
 					testMode=true}
 				else{testMode=false}
 			}
-		}, false)
+			else if (f.keyCode==222){
+				if(testMode==true){mode="EASTER"}
+			}})
 		canvas.addEventListener('click', function(e){
   			[x,y]=getCursorPosition(canvas, e)
 			let gridx=Math.round(x/size)
@@ -75,18 +75,19 @@
 			console.log(gridx,gridy)
 			if(mode=="bombe" && testMode==false){
 				if(new Date().getTime()-lastBomb>=3600000){
-					bomb(gridx,gridy)
+					bomb(gridx,gridy,3)
 					mode="standard"
 					lastBomb=new Date().getTime()
 				}
 				else{mode ="standard"}
 			}
+			else if(mode=="EASTER"){bomb(gridx,gridy,10)}
 			else if(mode=="bombe"){
-				bomb(gridx,gridy)
+				bomb(gridx,gridy,3)
 				mode="standard"
 			}
 			else if(testMode==true){grid[gridx][gridy]=couleur.value} 	
-			else if(new Date().getTime()-lastClic >=10000){
+			else if(new Date().getTime()-lastClic >=3000){
 				grid[gridx][gridy]=couleur.value
 				lastClic=new Date().getTime()
 			} 	
