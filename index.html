@@ -8,29 +8,53 @@
 	  
     <link rel="stylesheet" href = "style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet">
-	<script>
-		var canvas= document.getElementById("canva")
-		var couleur= document.getElementById("couleur")
-		var ctx = canvas.getContext("2d")
-		function getCursorPosition(canvas, event) {
-    			const rect = canvas.getBoundingClientRect()
-   			const x = event.clientX - rect.left
-   			 const y = event.clientY - rect.top
-   			 return x,y
-			}
-		canvas.addEventListener('click', function(e){
-  			getCursorPosition(canvas, e)
-		}
-		function drawPix(posx,posy,color){
-			ctx.rect(posx, posy, 5, 5);
-		}
-		drawPix()
-	  </script>
   </head>
 	<body>
 		<canvas style="border:1px solid black" id="canva" width="900" height="450"></canvas>
 	  <p>couleur du pixel :</p>
 	  <input type="color" id="couleur" value="#000000">
+	  <script>
+		let canvas= document.getElementById("canva")
+		let couleur= document.getElementById("couleur")
+		let ctx = canvas.getContext("2d")
+		const size = 20
+		function drawPix(posx,posy,color){
+			ctx.fillStyle = color
+			ctx.fillRect(posx-(size/2), posy-(size/2), size, size); 
+		}
+		function getCursorPosition(canvas, event) {
+    			const rect = canvas.getBoundingClientRect()
+				const x = event.clientX - rect.left
+				const y = event.clientY - rect.top
+				return [x,y]
+		}
+		function visite(){
+			ctx.clearRect(0,0,canvas.width,canvas.height)
+			
+			for(let i=0;i<(grid.length);i++){
+				for(let j=0;j<(grid[0].length);j++){
+					drawPix(i*size,j*size,grid[i][j])
+				}
+			}
+			window.requestAnimationFrame(visite)
+		}
+		canvas.addEventListener('click', function(e){
+  			[x,y]=getCursorPosition(canvas, e)
+			let gridx=Math.round(x/size)
+			let gridy=Math.round(y/size)
+			console.log(gridx,gridy)
+			drawPix(gridx*size,gridy*size,couleur.value)
+			grid[gridx][gridy]=couleur.value
+		})
+		let grid = []
+		for(let i=0;i<(canvas.width/size);i++){
+			grid[i]=[]
+			for(let j=0;j<(canvas.height/size);j++){
+				grid[i][j]='rgb(255,255,255)'//"rgb("+Math.floor(Math.random()*255)+", "+Math.floor(Math.random()*255)+", "+Math.floor(Math.random()*255)+")"
+			}
+		}
+		visite()
+	  </script>
 	</body>
 
 </html>
