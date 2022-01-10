@@ -5,12 +5,31 @@
 	  <meta name="viewport" content="width=device-width, initial-scale=1">
 	  <title>pixels</title>
 	  <link rel="icon" href="https://cdn.discordapp.com/attachments/492582429693968394/907669053122953266/pix.ico">
+	  
     <link rel="stylesheet" href = "style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet">
+	<script>
+		var canvas= document.getElementById("canva")
+		var couleur= document.getElementById("couleur")
+		var ctx = canvas.getContext("2d')
+		function getCursorPosition(canvas, event) {
+    			const rect = canvas.getBoundingClientRect()
+   			const x = event.clientX - rect.left
+   			 const y = event.clientY - rect.top
+   			 console.log("x: " + x + " y: " + y)
+			}
+		canvas.addEventListener('click', function(e){
+  			getCursorPosition(canvas, e)
+		}
+		function drawPix(posx,posy,color){
+			ctx.rect(posx, posy, 5, 5);
+		})
+	  </script>
   </head>
 	<body>
-		<canvas style="border:1px solid black" id="tutoriel" width="900" height="450"></canvas>
+		<canvas style="border:1px solid black" id="canva" width="900" height="450"></canvas>
 	  <p>couleur du pixel :</p>
-	  <input type="color" value="#000000">
+	  <input type="color" id="couleur" value="#000000">
 	</body>
+
 </html>
