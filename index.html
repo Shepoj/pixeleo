@@ -20,6 +20,9 @@
 		let couleur= document.getElementById("couleur")
 		let ctx = canvas.getContext("2d")
 		let mode="standard"
+		let lastBomb=0000000000000
+		let lastClic=0000000000000
+		let testMode=false
 		const size = 10
 		function drawPix(posx,posy,color){
 			ctx.fillStyle = color
@@ -58,16 +61,35 @@
 				mode="bombe"
 			}
 		}, false)
+		document.addEventListener("keydown",function(ee){
+			if(ee.keyCode==170){
+				if(testMode==false){
+					testMode=true}
+				else{testMode=false}
+			}
+		}, false)
 		canvas.addEventListener('click', function(e){
   			[x,y]=getCursorPosition(canvas, e)
 			let gridx=Math.round(x/size)
 			let gridy=Math.round(y/size)
 			console.log(gridx,gridy)
-			if(mode=="bombe"){
+			if(mode=="bombe" && testMode==false){
+				if(new Date().getTime()-lastBomb>=3600000){
+					bomb(gridx,gridy)
+					mode="standard"
+					lastBomb=new Date().getTime()
+				}
+				else{mode ="standard"}
+			}
+			else if(mode=="bombe"){
 				bomb(gridx,gridy)
 				mode="standard"
 			}
-			else{grid[gridx][gridy]=couleur.value} 	
+			else if(testMode==true){grid[gridx][gridy]=couleur.value} 	
+			else if(new Date().getTime()-lastClic >=10000){
+				grid[gridx][gridy]=couleur.value
+				lastClic=new Date().getTime()
+			} 	
 		})
 		let grid = []
 		for(let i=0;i<(canvas.width/size);i++){
