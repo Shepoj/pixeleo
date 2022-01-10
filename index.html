@@ -16,14 +16,15 @@
     			const rect = canvas.getBoundingClientRect()
    			const x = event.clientX - rect.left
    			 const y = event.clientY - rect.top
-   			 console.log("x: " + x + " y: " + y)
+   			 return x,y
 			}
 		canvas.addEventListener('click', function(e){
   			getCursorPosition(canvas, e)
 		}
 		function drawPix(posx,posy,color){
 			ctx.rect(posx, posy, 5, 5);
-		})
+		}
+		drawPix()
 	  </script>
   </head>
 	<body>
