@@ -17,7 +17,8 @@
 		let canvas= document.getElementById("canva")
 		let couleur= document.getElementById("couleur")
 		let ctx = canvas.getContext("2d")
-		const size = 20
+		let mode="standard"
+		const size = 10
 		function drawPix(posx,posy,color){
 			ctx.fillStyle = color
 			ctx.fillRect(posx-(size/2), posy-(size/2), size, size); 
@@ -27,6 +28,18 @@
 				const x = event.clientX - rect.left
 				const y = event.clientY - rect.top
 				return [x,y]
+		}
+		function f(x){
+			return Math.sqrt(1-x**2)||0
+		}
+		function bomb(x,y){
+			for(let i=0;i<(grid.length);i++){
+				for(let j=0;j<(grid[0].length);j++){
+					let dist = Math.sqrt((i-x)**2+(j-y)**2)
+					let prob = f(dist/3)
+					if(Math.random()<prob){grid[i][j]=couleur.value}
+				}
+			}
 		}
 		function visite(){
 			ctx.clearRect(0,0,canvas.width,canvas.height)
@@ -38,13 +51,21 @@
 			}
 			window.requestAnimationFrame(visite)
 		}
+		document.addEventListener("keydown",function(f){
+			if(f.keyCode==66){
+				mode="bombe"
+			}
+		}, false)
 		canvas.addEventListener('click', function(e){
   			[x,y]=getCursorPosition(canvas, e)
 			let gridx=Math.round(x/size)
 			let gridy=Math.round(y/size)
 			console.log(gridx,gridy)
-			drawPix(gridx*size,gridy*size,couleur.value)
-			grid[gridx][gridy]=couleur.value
+			if(mode=="bombe"){
+				bomb(gridx,gridy)
+				mode="standard"
+			}
+			else{grid[gridx][gridy]=couleur.value} 	
 		})
 		let grid = []
 		for(let i=0;i<(canvas.width/size);i++){
