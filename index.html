@@ -49,7 +49,7 @@
           let dist = Math.sqrt((i - x) ** 2 + (j - y) ** 2)
           let prob = f(dist / power)
           if (Math.random() < prob) {
-            grid[i][j] = couleur.value
+            addPixel(i, j, couleur.value)
           }
         }
       }
@@ -65,17 +65,17 @@
       }
       window.requestAnimationFrame(visite)
     }
+
+    function addPixel(x, y, color){
+      grid[x][y] = color;
+    }
     document.addEventListener("keydown", function(f) {
       if (f.keyCode == 66) {
         mode = "bombe"
       } else if (f.keyCode == 170) {
-        if (testMode == false) {
-          testMode = true
-        } else {
-          testMode = false
-        }
+        testMode = !testMode
       } else if (f.keyCode == 222) {
-        if (testMode == true) {
+        if (testMode) {
           mode = "EASTER"
         }
       }
