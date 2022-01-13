@@ -72,9 +72,9 @@
     document.addEventListener("keydown", function(f) {
       if (f.keyCode == 66) {
         mode = "bombe"
-      } else if (f.keyCode == 170) {
+      } else if (f.keyCode == 67) {
         testMode = !testMode
-      } else if (f.keyCode == 222) {
+      } else if (f.keyCode == 86) {
         if (testMode) {
           mode = "EASTER"
         }
@@ -84,23 +84,16 @@
       [x, y] = getCursorPosition(canvas, e)
       let gridx = Math.round(x / size)
       let gridy = Math.round(y / size)
-      if (mode == "bombe" && testMode == false) {
-        if (new Date().getTime() - lastBomb >= 3600000) {
+      if (mode == "bombe") {
+        if(testMode || new Date().getTime() - lastBomb >= 3600000){
           bomb(gridx, gridy, 3)
           mode = "standard"
           lastBomb = new Date().getTime()
-        } else {
-          mode = "standard"
         }
       } else if (mode == "EASTER") {
         bomb(gridx, gridy, 10)
-      } else if (mode == "bombe") {
-        bomb(gridx, gridy, 3)
-        mode = "standard"
-      } else if (testMode == true) {
-        grid[gridx][gridy] = couleur.value
-      } else if (new Date().getTime() - lastClic >= 3000) {
-        grid[gridx][gridy] = couleur.value
+      } else if (testMode == true || new Date().getTime() - lastClic >= 3000) {
+        qddPixel(gridx, gridy, couleur.value)
         lastClic = new Date().getTime()
       }
     })
