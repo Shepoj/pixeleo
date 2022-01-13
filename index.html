@@ -47,9 +47,47 @@
 
     class Cell{
       constructor(x, y, color){
+        this.id = Math.random();
         this.x = x;
         this.y = y;
         this.color = color;
+      }
+      isItAllSurrounded(l, v){
+        l.push(this.id);
+        let fa = true;
+        for(let i = -1; i<=1; i++){
+          for(let j = -1; j<=1; j++){
+            if (this.x+i<0 || this.x+i>=(canvas.width / size)||this.y+j<0 || this.y+j>=(canvas.height / size)) {
+              return false;
+            }
+            let cell = grid[this.x+i][this.y+j]
+            if(!l.includes(cell.id)){
+              if(cell.color != v){
+                if(!cell.isItAllSurrounded(l, v)){
+                  fa = false;
+                }
+              }
+            }
+          }
+        }
+        return fa;
+      }
+      fill(l, t, v){
+        l.push(this.id);
+        this.color = v;
+        for(let i = -1; i<=1; i++){
+          for(let j = -1; j<=1; j++){
+            if (this.x+i<0 || this.x+i>=(canvas.width / size)||this.y+j<0 || this.y+j>=(canvas.height / size)) {
+              continue;
+            }
+            let cell = grid[this.x+i][this.y+j]
+            if(!l.includes(cell.id)){
+              if(cell.color == t){
+                cell.fill(l, t, v);
+              }
+            }
+          }
+        }
       }
     }
 
@@ -77,7 +115,11 @@
     }
 
     function addPixel(x, y, color){
+      o = grid[x][y].color;
       grid[x][y].color = color;
+      if (grid[x][y].isItAllSurrounded([], color)) {
+        grid[x][y].fill([], o, color);
+      }
     }
 
     function click(x, y){
@@ -104,7 +146,7 @@
     for (let i = 0; i < (canvas.width / size); i++) {
       grid[i] = [];
       for (let j = 0; j < (canvas.height / size); j++) {
-        grid[i][j] = new Cell(i, j, 'rgb(255,255,255)') //"rgb("+Math.floor(Math.random()*255)+", "+Math.floor(Math.random()*255)+", "+Math.floor(Math.random()*255)+")"
+        grid[i][j] = new Cell(i, j, '#FFFFFF') //"rgb("+Math.floor(Math.random()*255)+", "+Math.floor(Math.random()*255)+", "+Math.floor(Math.random()*255)+")"
       }
     }
 
