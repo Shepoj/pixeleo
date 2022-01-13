@@ -32,6 +32,12 @@
         }
       }
     })
+    function getCursorPosition(canvas, event) {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      return [x, y];
+    }
     canvas.addEventListener('click', function(e) {
       [x, y] = getCursorPosition(canvas, e)
       let gridx = Math.round(x / size);
@@ -39,25 +45,20 @@
       click(gridx, gridy);
     })
 
-    let grid = [];
-    for (let i = 0; i < (canvas.width / size); i++) {
-      grid[i] = [];
-      for (let j = 0; j < (canvas.height / size); j++) {
-        grid[i][j] = 'rgb(255,255,255)'; //"rgb("+Math.floor(Math.random()*255)+", "+Math.floor(Math.random()*255)+", "+Math.floor(Math.random()*255)+")"
+    class Cell{
+      constructor(x, y, color){
+        this.x = x;
+        this.y = y;
+        this.color = color;
       }
     }
+
 
     function drawPix(posx, posy, color) {
       ctx.fillStyle = color;
       ctx.fillRect(posx - (size / 2), posy - (size / 2), size, size);
     }
 
-    function getCursorPosition(canvas, event) {
-      const rect = canvas.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      return [x, y];
-    }
 
     function f(x) {
       return Math.sqrt(1 - x ** 2) || 0;
@@ -66,7 +67,7 @@
     function bomb(x, y, power) {
       for (let i = 0; i < (grid.length); i++) {
         for (let j = 0; j < (grid[0].length); j++) {
-          let dist = Math.sqrt((i - x) ** 2 + (j - y) ** 2)
+          let dist = Math.sqrt((i - x) ** 2 + (j - y) ** 2);
           let prob = f(dist / power);
           if (Math.random() < prob) {
             addPixel(i, j, couleur.value);
@@ -76,7 +77,7 @@
     }
 
     function addPixel(x, y, color){
-      grid[x][y] = color;
+      grid[x][y].color = color;
     }
 
     function click(x, y){
@@ -99,13 +100,20 @@
     let lastClic = 0;
     let testMode = false;
     const size = 10;
+    let grid = [];
+    for (let i = 0; i < (canvas.width / size); i++) {
+      grid[i] = [];
+      for (let j = 0; j < (canvas.height / size); j++) {
+        grid[i][j] = new Cell(i, j, 'rgb(255,255,255)') //"rgb("+Math.floor(Math.random()*255)+", "+Math.floor(Math.random()*255)+", "+Math.floor(Math.random()*255)+")"
+      }
+    }
 
     function visite() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       for (let i = 0; i < (grid.length); i++) {
         for (let j = 0; j < (grid[0].length); j++) {
-          drawPix(i * size, j * size, grid[i][j]);
+          drawPix(i * size, j * size, grid[i][j].color);
         }
       }
       window.requestAnimationFrame(visite)
