@@ -93,7 +93,7 @@
       } else if (mode == "EASTER") {
         bomb(gridx, gridy, 10);
       } else if (testMode == true || new Date().getTime() - lastClic >= 3000) {
-        qddPixel(gridx, gridy, couleur.value);
+        addPixel(gridx, gridy, couleur.value);
         lastClic = new Date().getTime();
       }
     })
