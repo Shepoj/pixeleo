@@ -4,7 +4,7 @@ test creation jeu js html
 - [x] mettre en place un canvas
 - [x] créer concept de base
 - [x] interface + jolie
-- [ ] timers pour les clics placement
+- [x] timers pour les clics placement
 - [ ] bombe mulitcouleur 
 ## Details
 - ADMIN MODE : APPUYEZ SUR µ  
