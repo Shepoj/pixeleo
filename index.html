@@ -39,7 +39,7 @@
 		}
 		function sms(x,y){
 			for(let i=0;i<=100;i++){
-				if(x+i<grid.length-1 && x-i>=0 && y+i<grid[0].length-1 && y-i>=0){
+				if(x+i<grid.length-1 && x-i>0 && y+i<grid[0].length-1 && y-i>0){
 					[grid[x+i][y],grid[x-i][y],grid[x][y+i],grid[x][y-i]]=[couleur.value,couleur.value,couleur.value,couleur.value]}
 			}
 		}
