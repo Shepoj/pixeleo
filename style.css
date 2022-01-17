@@ -6,6 +6,7 @@
   }
   footer{ 
     bottom: 0;
+    align-items: right;
   }
   body{
     align-items: center;
