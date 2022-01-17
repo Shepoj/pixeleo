@@ -4,6 +4,9 @@
     color: "white";
 
   }
+  footer{ 
+    bottom: 0;
+  }
   body{
     align-items: center;
     text-align: center;
