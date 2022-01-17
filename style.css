@@ -2,5 +2,10 @@
     font-size: xx-large;
     font-family: 'Poiret One', cursive;
     color: "white";
+
+  }
+  body{
+    align-items: center;
+    text-align: center;
   }
   
