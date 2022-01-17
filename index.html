@@ -1,167 +1,120 @@
 <!DOCTYPE html>
 <html>
-
-<head background="assets/bg.png">
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>pixeleo</title>
-  <link rel="icon" href="https://cdn.discordapp.com/attachments/492582429693968394/907669053122953266/pix.ico">
-
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet">
-</head>
-
-<body style="background-color:#201e35;">
-
-  <h1><img src="https://cdn.discordapp.com/attachments/492582429693968394/930135078124793916/unknown.png" alt="logo swag" width='236' height="118" /></h1>
-  <canvas style="border:1px solid black" id="canva" width="900" height="450"></canvas>
-  <p style="color:white;">couleur du pixel :</p>
-  <input type="color" id="couleur" value="#000000">
-  <script>
-    let canvas = document.getElementById("canva");
-    let couleur = document.getElementById("couleur");
-    let ctx = canvas.getContext("2d");
-    document.addEventListener("keydown", function(f) {
-      if (f.keyCode == 66) {
-        mode = "bombe";
-      } else if (f.keyCode == 67) {
-        testMode = !testMode;
-      } else if (f.keyCode == 86) {
-        if (testMode) {
-          mode = "EASTER";
-        }
-      }
-    })
-    function getCursorPosition(canvas, event) {
-      const rect = canvas.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      return [x, y];
-    }
-    canvas.addEventListener('click', function(e) {
-      [x, y] = getCursorPosition(canvas, e)
-      let gridx = Math.round(x / size);
-      let gridy = Math.round(y / size);
-      click(gridx, gridy);
-    })
-
-    class Cell{
-      constructor(x, y, color){
-        this.id = Math.random();
-        this.x = x;
-        this.y = y;
-        this.color = color;
-      }
-      isItAllSurrounded(l, v){
-        l.push(this.id);
-        let fa = true;
-        for(let i = -1; i<=1; i++){
-          for(let j = -1; j<=1; j++){
-            if (this.x+i<0 || this.x+i>=(canvas.width / size)||this.y+j<0 || this.y+j>=(canvas.height / size)) {
-              return false;
-            }
-            let cell = grid[this.x+i][this.y+j]
-            if(!l.includes(cell.id)){
-              if(cell.color != v){
-                if(!cell.isItAllSurrounded(l, v)){
-                  fa = false;
-                }
-              }
-            }
-          }
-        }
-        return fa;
-      }
-      fill(l, t, v){
-        l.push(this.id);
-        this.color = v;
-        for(let i = -1; i<=1; i++){
-          for(let j = -1; j<=1; j++){
-            if (this.x+i<0 || this.x+i>=(canvas.width / size)||this.y+j<0 || this.y+j>=(canvas.height / size)) {
-              continue;
-            }
-            let cell = grid[this.x+i][this.y+j]
-            if(!l.includes(cell.id)){
-              if(cell.color == t){
-                cell.fill(l, t, v);
-              }
-            }
-          }
-        }
-      }
-    }
-
-
-    function drawPix(posx, posy, color) {
-      ctx.fillStyle = color;
-      ctx.fillRect(posx - (size / 2), posy - (size / 2), size, size);
-    }
-
-
-    function f(x) {
-      return Math.sqrt(1 - x ** 2) || 0;
-    }
-
-    function bomb(x, y, power) {
-      for (let i = 0; i < (grid.length); i++) {
-        for (let j = 0; j < (grid[0].length); j++) {
-          let dist = Math.sqrt((i - x) ** 2 + (j - y) ** 2);
-          let prob = f(dist / power);
-          if (Math.random() < prob) {
-            addPixel(i, j, couleur.value);
-          }
-        }
-      }
-    }
-
-    function addPixel(x, y, color){
-      o = grid[x][y].color;
-      grid[x][y].color = color;
-      if (grid[x][y].isItAllSurrounded([], color)) {
-        grid[x][y].fill([], o, color);
-      }
-    }
-
-    function click(x, y){
-      if (mode == "bombe") {
-        if(testMode || new Date().getTime() - lastBomb >= 3600000){
-          bomb(x, y, 3);
-          mode = "standard";
-          lastBomb = new Date().getTime();
-        }
-      } else if (mode == "EASTER") {
-        bomb(x, y, 10);
-      } else if (testMode == true || new Date().getTime() - lastClic >= 3000) {
-        addPixel(x, y, couleur.value);
-        lastClic = new Date().getTime();
-      }
-    }
-
-    let mode = "standard";
-    let lastBomb = 0;
-    let lastClic = 0;
-    let testMode = false;
-    const size = 10;
-    let grid = [];
-    for (let i = 0; i < (canvas.width / size); i++) {
-      grid[i] = [];
-      for (let j = 0; j < (canvas.height / size); j++) {
-        grid[i][j] = new Cell(i, j, '#FFFFFF') //"rgb("+Math.floor(Math.random()*255)+", "+Math.floor(Math.random()*255)+", "+Math.floor(Math.random()*255)+")"
-      }
-    }
-
-    function visite() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (let i = 0; i < (grid.length); i++) {
-        for (let j = 0; j < (grid[0].length); j++) {
-          drawPix(i * size, j * size, grid[i][j].color);
-        }
-      }
-      window.requestAnimationFrame(visite)
-    }
-    visite()
-  </script>
-</body>
+  <head background="assets/bg.png">
+    <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <title>pixeleo</title>
+	  <link rel="icon" type="image/png" href="https://i.ibb.co/jVFB2Ps/ico.png">
+	  
+    <link rel="stylesheet" href = "style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet">
+  </head>
+	<body style="background-color:#201e35;">
+	
+	<h1><img src="https://i.ibb.co/vYysQkT/logo-pixeleo.png" alt="logo swag" width='236' height="118"/></h1>
+	<canvas style="border:1px solid black" id="canva" width="900" height="450"></canvas>
+	<p style="color:white;">couleur du pixel :</p>
+	<input type="color" id="couleur" value="#000000">
+	  <script>
+		let canvas= document.getElementById("canva")
+		let couleur= document.getElementById("couleur")
+		let ctx = canvas.getContext("2d")
+		let mode="standard"
+		let lastBomb=0000000000000
+		let lastClic=0000000000000
+		let testMode=false
+		const size = 10
+		function drawPix(posx,posy,color){
+			ctx.fillStyle = color
+			ctx.fillRect(posx-(size/2), posy-(size/2), size, size); 
+		}
+		function getCursorPosition(canvas, event) {
+    			const rect = canvas.getBoundingClientRect()
+				const x = event.clientX - rect.left
+				const y = event.clientY - rect.top
+				return [x,y]
+		}
+		function f(x){
+			return Math.sqrt(1-x**2)||0
+		}
+		function sms(x,y){
+			for(let i=0;i<=4;i++){
+				[grid[x+i][y],grid[x-i][y],grid[x][y+i],grid[x][y-i]]=[couleur.value,couleur.value,couleur.value,couleur.value]
+			}
+		}
+		function bomb(x,y,power){
+			for(let i=0;i<(grid.length);i++){
+				for(let j=0;j<(grid[0].length);j++){
+					let dist = Math.sqrt((i-x)**2+(j-y)**2)
+					let prob = f(dist/power)
+					if(Math.random()<prob){grid[i][j]=couleur.value}
+				}
+			}
+		}
+		function visite(){
+			ctx.clearRect(0,0,canvas.width,canvas.height)
+			
+			for(let i=0;i<(grid.length);i++){
+				for(let j=0;j<(grid[0].length);j++){
+					drawPix(i*size,j*size,grid[i][j])
+				}
+			}
+			window.requestAnimationFrame(visite)
+		}
+		document.addEventListener("keydown",function(f){
+			if(f.keyCode==66){
+				mode="bombe"
+			}
+			else if(f.keyCode==170){
+				if(testMode==false){
+					testMode=true}
+				else{testMode=false}
+			}
+			else if (f.keyCode==222){
+				if(testMode==true){mode="EASTER"}
+			}
+			else if(f.keyCode=88){
+				mode="sms"
+			}})
+		canvas.addEventListener('click', function(e){
+  			[x,y]=getCursorPosition(canvas, e)
+			let gridx=Math.round(x/size)
+			let gridy=Math.round(y/size)
+			console.log(gridx,gridy)
+			if(mode=="bombe" && testMode==false){
+				if(new Date().getTime()-lastBomb>=3600000){
+					bomb(gridx,gridy,3)
+					mode="standard"
+					lastBomb=new Date().getTime()
+				}
+				else{mode ="standard"}
+			}
+			else if(mode=="EASTER"){
+				bomb(gridx,gridy,10)
+				mode="standard"}
+			else if(mode=="sms"){
+				sms(gridx,gridy)
+				console.log("pog")
+				mode="standard"}
+			else if(mode=="bombe"){
+				bomb(gridx,gridy,3)
+				mode="standard"
+			}
+			else if(testMode==true){grid[gridx][gridy]=couleur.value} 	
+			else if(new Date().getTime()-lastClic >=3000){
+				grid[gridx][gridy]=couleur.value
+				lastClic=new Date().getTime()
+			} 	
+		})
+		let grid = []
+		for(let i=0;i<(canvas.width/size);i++){
+			grid[i]=[]
+			for(let j=0;j<(canvas.height/size);j++){
+				grid[i][j]='rgb(255,255,255)'//"rgb("+Math.floor(Math.random()*255)+", "+Math.floor(Math.random()*255)+", "+Math.floor(Math.random()*255)+")"
+			}
+		}
+		visite()
+	  </script>
+	</body>
 
 </html>
